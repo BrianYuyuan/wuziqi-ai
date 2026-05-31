@@ -1,3 +1,4 @@
+import os
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
@@ -227,8 +228,9 @@ class WuziqiGUI:
             self.game.AIPlayer = ai_player.AIPlayer(self.game)
             self.game.this_ai_player = PLAYER2 if player == PLAYER1 else PLAYER1
             self.commentator = ai_commentator.AICommentator(
-                model="qwen2.5:7b",
-                system_prompt="你是一个自大的五子棋选手，每次落子后用一两句话简单解释你的选择。"  
+                model = MODEL_NAME,
+                system_prompt = DEFAULT_SYSTEM_PROMPT,
+                api_key = os.getenv("GROQ_API_KEY")
             )
         self.selection_window.destroy()
         self.root.deiconify()
@@ -381,7 +383,13 @@ EMPTY = 0
 PLAYER1 = 1
 PLAYER2 = 2
 
+MODEL_NAME = "llama-3.3-70b-versatile"
+DEFAULT_SYSTEM_PROMPT = "你是一个自大的五子棋选手，每次落子后用一两句话简单解释你的选择。"  
+API_KEY = "your_api_key_here"
+
 # 主程序入口，创建游戏实例并启动图形界面
 if __name__ == "__main__":
+    print("API key loaded:", os.getenv("GROQ_API_KEY"))
     game = WuziqiGame(SIZE, WIN_LENGTH)
     game.gui.start()
+    

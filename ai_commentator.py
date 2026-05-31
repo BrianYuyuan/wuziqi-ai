@@ -2,15 +2,17 @@ import requests
 
 class AICommentator:
 
-    def __init__(self, model, system_prompt):
+    def __init__(self, model, system_prompt, api_key):
         '''
         初始化AICommentator类，接受系统提示和语言模型作为参数。
         - 参数：
             - system_prompt: 用于指导语言模型生成评论的系统提示文本
-            - model: 语言模型实例，具有generate方法用于生成文本
+            - model: 语言模型实例
+            - api_key: Groq API密钥
         '''
         self.model = model
         self.system_prompt = system_prompt
+        self.api_key = api_key
 
     def board_to_string(self, board):
         '''
@@ -61,11 +63,18 @@ class AICommentator:
         prompt = self.write_prompt(board, ai_row, ai_column, ai_player)
         print(prompt)  # Debug: 输出生成评论的提示文本
 
-        response = requests.post("http://localhost:11434/api/generate", json={
+        response = requests.post("https://api.groq.com/openai/v1/chat/completions", 
+            headers={
+                "Authorization": f"Bearer {self.api_key}"
+            }, 
+            json={
             "model": self.model,
-            "system": self.system_prompt,
-            "prompt": prompt,
-            "stream": False
+            "messages": [
+                {"role": "system", "content": self.system_prompt},
+                {"role": "user", "content": prompt}
+            ],
+            "stream": False,
         })
-        return response.json()["response"]
+        # print(response.json())  # Debug: 输出API响应的完整JSON内容
+        return response.json()["choices"][0]["message"]["content"]
         
