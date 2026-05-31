@@ -1,9 +1,3 @@
----
-noteId: "7a40f570530711f18f207d68b1aaec40"
-tags: []
-
----
-
 # Wuziqi-AI
 
 A Wuziqi (Gomoku) game built with Python and Tkinter, featuring a PvP mode, a simple AI opponent, and an LLM-powered commentator that explains the AI's moves in natural language.
